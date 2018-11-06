@@ -1,16 +1,16 @@
 package environment;
 
-import javax.enterprise.inject.Any;
+import javax.inject.Named;
 
-@Any
+@Named
 public class Environment {
     private String soapScheme;
     private String soapHost;
     private int soapPort;
 
-    Environment() {}
+    public Environment() {}
 
-    Environment(String soapScheme, String soapHost, int soapPort) {
+    public Environment(String soapScheme, String soapHost, int soapPort) {
         this.soapScheme = soapScheme;
         this.soapHost = soapHost;
         this.soapPort = soapPort;
