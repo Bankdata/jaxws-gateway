@@ -1,29 +1,163 @@
-group 'Bankdata'
-version '0.5'
 
-apply plugin: 'war'
+group 'dk.bankdata.jaxws'
+
 apply plugin: 'java'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
+apply plugin: 'checkstyle'
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+checkstyle {
+    toolVersion = '8.12'
+}
+
+test {
+    jacoco {
+        includes = ['*.*']
+    }
+}
 
 repositories {
-    maven { url 'https://artifactory.tools.bdpnet.dk/artifactory/plugins-release' }
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
-    providedCompile(group: "javax", name: "javaee-api", version: "7.0")
+    compileOnly(group: 'javax.enterprise', name: 'cdi-api', version: project['javax.enterprise.version'])
 
-    compile(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.0.4')
-    compile(group: "com.fasterxml.jackson.jaxrs", name: "jackson-jaxrs-json-provider", version: "2.8.4")
-    compile(group: "com.fasterxml.jackson.datatype", name: "jackson-datatype-jsr310", version: "2.8.4")
-    compile(group: 'com.auth0', name: 'java-jwt', version: '3.4.0')
+    compileOnly(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: project['com.fasterxml.jackson.version'])
+    compileOnly(group: 'dk.bankdata.jaxrs', name: 'security', version: project ['dk.bankdata.jaxrs.security.version'])
+    compileOnly(group: 'javax.validation', name: 'validation-api', version: project['javax.validation.version'])
+    compileOnly (group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: project['com.fasterxml.jackson.version'])
 
-    compile(group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25')
+    testCompile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: project['com.fasterxml.jackson.version'])
+    testCompile(group: 'dk.bankdata.jaxrs', name: 'security', version: project ['dk.bankdata.jaxrs.security.version'])
+    testCompile(group: 'junit', name: 'junit', version: project['junit.version'])
+}
 
-    testCompile(group: "org.jboss.weld", name: "weld-junit5", version: "1.3.1.Final")
-    testCompile(group: "org.junit.platform", name: "junit-platform-launcher", version: "1.3.1")
-    testCompile(group: "org.junit.vintage", name: "junit-vintage-engine", version: "5.1.0")
-    testCompile(group: "junit", name: "junit", version: "4.12")
-    testCompile(group: "org.mockito", name: "mockito-core", version: "2.21.0")
-    testCompile(group: "com.google.truth", name: "truth", version: "0.25")
+model {
+    tasks.generatePomFileForMavenJavaPublication {
+        destination = file("$buildDir/generated-pom.xml")
+    }
+    tasks.publishMavenJavaPublicationToMavenLocal {
+        dependsOn project.tasks.signArchives
+    }
+    tasks.publishMavenJavaPublicationToMavenRepository {
+        dependsOn project.tasks.signArchives
+    }
+}
+
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            customizePom(pom)
+            groupId 'dk.bankdata.jaxws'
+            artifactId 'gateway'
+            version version
+
+            from components.java
+
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+            }
+
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+
+            project.tasks.signArchives.signatureFiles.each {
+                artifact(it) {
+                    def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                    if (matcher.find()) {
+                        classifier = matcher.group(1)
+                    } else {
+                        classifier = null
+                    }
+                    extension = 'jar.asc'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username project.hasProperty('ossrhUsername') ? ossrhUsername : ''
+                password project.hasProperty('ossrhPassword') ? ossrhPassword : ''
+            }
+        }
+    }
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            name 'JaxWS-Gateway'
+            description 'JaxWs-Gateway helps work with SOAP calls'
+            url 'https://github.com/Bankdata/jaxws-gateway'
+            scm {
+                connection 'scm:git:https://github.com/Bankdata/jaxws-gateway.git'
+                developerConnection 'scm:git:https://github.com/Bankdata/jaxws-gateway.git'
+                url 'https://github.com/Bankdata/jaxws-gateway'
+                tag 'HEAD'
+            }
+            licenses {
+                license {
+                    name 'The MIT License'
+                    url 'https://opensource.org/licenses/MIT'
+                }
+            }
+            developers {
+                developer {
+                    id 'bogedal'
+                    name 'Kenneth Bøgedal'
+                    email 'kbh@bankdata.dk'
+                    organization 'Bankdata'
+                    organizationUrl 'https://www.bankdata.dk'
+                }
+            }
+        }
+    }
 }

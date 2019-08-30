@@ -1,10 +1,7 @@
 package domain;
 
-import environment.Environment;
-
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import java.lang.reflect.ParameterizedType;
@@ -14,9 +11,6 @@ import java.net.URL;
 import java.util.Map;
 
 public class JaxWsGatewayProducer {
-    @Inject
-    Environment environment;
-
     @Produces
     @JaxWsEndpoint(service = Service.class)
     public <T> JaxWsGateway<T> create(InjectionPoint inject) {
@@ -40,20 +34,12 @@ public class JaxWsGatewayProducer {
 
             String urlPath = uri.getPath();
 
-            String scheme = environment.getSoapScheme();
-            String host = environment.getSoapHost();
-            int portNo = environment.getSoapPort();
-
             URL endpointUrl;
 
             try {
-                endpointUrl = new URL(scheme, host, portNo, urlPath);
+                endpointUrl = buildEndpointUrl(urlPath);
             } catch (MalformedURLException e) {
-                throw new RuntimeException("Unable to create url from " +
-                        scheme + "|" +
-                        host + "|" +
-                        portNo + "|" +
-                        urlPath + "|", e);
+                throw new RuntimeException("Unable to create soap url.", e);
             }
 
             requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointUrl.toString());
@@ -63,4 +49,23 @@ public class JaxWsGatewayProducer {
             throw new RuntimeException("Unable to create port instance", e);
         }
     }
+
+    private URL buildEndpointUrl(String urlPath) throws MalformedURLException {
+        String soapScheme = loadSystemEnvironmentVariable("SOAP_SCHEME");
+        String soapHost = loadSystemEnvironmentVariable("SOAP_HOST");
+        int soapPort = Integer.parseInt(loadSystemEnvironmentVariable("SOAP_PORT"));
+
+        return new URL(soapScheme, soapHost, soapPort, urlPath);
+    }
+
+    private String loadSystemEnvironmentVariable(String variableName) {
+        String value = System.getenv(variableName);
+
+        if (value == null || value.isEmpty()) {
+            throw new RuntimeException("Expected environment variable: " + variableName);
+        }
+
+        return value;
+    }
+
 }
