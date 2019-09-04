@@ -1,4 +1,4 @@
-package domain;
+package dk.bankdata.jaxws.gateway;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

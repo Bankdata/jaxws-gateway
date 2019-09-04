@@ -1,4 +1,4 @@
-package domain;
+package dk.bankdata.jaxws.gateway;
 
 /**
  * A wrapper for a port of a SOAP port. Unfortunately this is necessary

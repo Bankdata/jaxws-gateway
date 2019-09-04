@@ -1,4 +1,4 @@
-package domain;
+package dk.bankdata.jaxws.gateway;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
