@@ -1,4 +1,4 @@
-package dk.bankdata.jaxws.gateway;
+package dk.bankdata.jaxws.gateway.cdi;
 
 /**
  * A wrapper for a port of a SOAP port. Unfortunately this is necessary

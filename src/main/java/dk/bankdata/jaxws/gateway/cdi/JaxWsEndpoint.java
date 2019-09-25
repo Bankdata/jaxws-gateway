@@ -1,4 +1,4 @@
-package dk.bankdata.jaxws.gateway;
+package dk.bankdata.jaxws.gateway.cdi;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -13,7 +13,4 @@ import java.lang.annotation.Target;
 @Qualifier
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
-public @interface JaxWsEndpoint {
-    @Nonbinding
-    Class<? extends Service> service();
-}
+public @interface JaxWsEndpoint {}
