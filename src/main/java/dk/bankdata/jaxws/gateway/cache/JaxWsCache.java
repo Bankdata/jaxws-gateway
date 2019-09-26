@@ -1,5 +1,7 @@
 package dk.bankdata.jaxws.gateway.cache;
 
+import dk.bankdata.jaxws.gateway.domain.Environment;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -10,11 +12,11 @@ import javax.inject.Inject;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
-import dk.bankdata.jaxws.gateway.domain.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
+@SuppressWarnings("VariableDeclarationUsageDistance")
 public class JaxWsCache {
     @Inject
     Environment environment;

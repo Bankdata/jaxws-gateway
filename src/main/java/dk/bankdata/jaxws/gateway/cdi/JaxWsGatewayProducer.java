@@ -1,17 +1,12 @@
 package dk.bankdata.jaxws.gateway.cdi;
 
+import dk.bankdata.jaxws.gateway.cache.JaxWsCache;
+
+import java.lang.reflect.ParameterizedType;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Service;
-import java.lang.reflect.ParameterizedType;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.Map;
 
-import dk.bankdata.jaxws.gateway.cache.JaxWsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

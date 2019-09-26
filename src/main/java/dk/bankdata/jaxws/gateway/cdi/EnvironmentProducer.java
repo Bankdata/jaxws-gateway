@@ -1,11 +1,11 @@
 package dk.bankdata.jaxws.gateway.cdi;
 
+import dk.bankdata.jaxws.gateway.domain.Environment;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
-
-import dk.bankdata.jaxws.gateway.domain.Environment;
 
 @ApplicationScoped
 public class EnvironmentProducer {
