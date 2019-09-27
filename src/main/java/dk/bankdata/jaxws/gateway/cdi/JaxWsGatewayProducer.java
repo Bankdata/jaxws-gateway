@@ -19,7 +19,7 @@ public class JaxWsGatewayProducer {
     private static final Logger LOG = LoggerFactory.getLogger(JaxWsGatewayProducer.class);
 
     @Produces
-    @JaxWsEndpoint()
+    @JaxWsEndpoint
     public <T> JaxWsGateway<T> create(InjectionPoint inject) {
         if (!(inject.getType() instanceof ParameterizedType)) {
             throw new IllegalArgumentException("Injection point must be of type JaxWsGateway<port>");
