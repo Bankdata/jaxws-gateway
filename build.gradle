@@ -31,7 +31,7 @@ dependencies {
     compileOnly(group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: project['org.apache.cxf.version'])
     compileOnly(group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: project['org.apache.cxf.version'])
 
-    compileOnly(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1')
+    compileOnly(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: project ['javax.ws.rs.api.version'])
     compileOnly(group: 'javax.enterprise', name: 'cdi-api', version: project['javax.enterprise.version'])
 
     compileOnly(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: project['com.fasterxml.jackson.version'])
