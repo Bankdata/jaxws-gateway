@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 @RequestScoped
 public class JaxWsGatewayProducer {
     @Inject
-    JaxWsCache jaxWsCache;
+    private JaxWsCache jaxWsCache;
 
     private static final Logger LOG = LoggerFactory.getLogger(JaxWsGatewayProducer.class);
 

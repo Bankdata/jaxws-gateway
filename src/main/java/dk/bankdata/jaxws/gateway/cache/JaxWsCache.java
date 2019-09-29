@@ -9,14 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.ext.Provider;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Provider
 @ApplicationScoped
 @SuppressWarnings("VariableDeclarationUsageDistance")
 public class JaxWsCache {
@@ -25,6 +23,8 @@ public class JaxWsCache {
 
     private Map<String, Object> portMap = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(JaxWsCache.class);
+
+    private JaxWsCache(){}
 
     public JaxWsCache port(Class<? extends Service> service, Class<?> portType) {
         try {
