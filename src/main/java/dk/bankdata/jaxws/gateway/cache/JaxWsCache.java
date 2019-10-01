@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
+import org.apache.cxf.jaxws.spi.ProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ public class JaxWsCache {
 
     public JaxWsCache port(Class<? extends Service> service, Class<?> portType) {
         try {
-            LOG.info("Provider class is " + javax.xml.ws.spi.Provider.provider().getClass());
+            checkCxfAvailability();
 
             long start = System.currentTimeMillis();
             Service cacheService = service.newInstance();
@@ -71,6 +72,18 @@ public class JaxWsCache {
         }
 
         return this;
+    }
+
+    private void checkCxfAvailability() {
+        try{
+            ProviderImpl.provider().getClass();
+        } catch (java.lang.NoClassDefFoundError e) {
+            throw new RuntimeException("org.apache.cxf provider not available. " +
+                    "Please add the following to your gradle.build \r\n" +
+                    "compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.3' \r\n" +
+                    "compile group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.3' \r\n" +
+                    "Version is the minimum tested - newer version may be available! \r\n");
+        }
     }
 
     public <T> T getPort(String key) {
