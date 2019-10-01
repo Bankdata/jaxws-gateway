@@ -40,8 +40,8 @@ In the following section there will be provided code examples of each part of th
 ### System environment and dependencies
 For this library i function you need to do the following:
 1) add these dependencies to your gradle.build file<br>
-   compile(group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.3')<br>
-   compile(group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.3')<br>
+   `compile(group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.3')`<br>
+   `compile(group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.3')`<br>
 
 2) define these system environment variables:<br>
 `SOAP_SCHEME`<br>
