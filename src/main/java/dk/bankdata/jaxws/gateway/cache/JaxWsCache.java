@@ -25,7 +25,7 @@ public class JaxWsCache {
     private Map<String, Object> portMap = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(JaxWsCache.class);
 
-    private JaxWsCache(){}
+    public JaxWsCache(){}
 
     public JaxWsCache port(Class<? extends Service> service, Class<?> portType) {
         try {
@@ -75,7 +75,7 @@ public class JaxWsCache {
     }
 
     private void checkCxfAvailability() {
-        try{
+        try {
             ProviderImpl.provider().getClass();
         } catch (java.lang.NoClassDefFoundError e) {
             throw new RuntimeException("org.apache.cxf provider not available. " +
