@@ -12,6 +12,10 @@ import javax.inject.Inject;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
+import dk.bankdata.jaxws.gateway.interceptors.TracingInInterceptor;
+import dk.bankdata.jaxws.gateway.interceptors.TracingOutInterceptor;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.spi.ProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +65,10 @@ public class JaxWsCache {
             }
 
             requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointUrl.toString());
+
+            Client cxfClient = ClientProxy.getClient(port);
+            cxfClient.getInInterceptors().add(new TracingOutInterceptor());
+            cxfClient.getOutInterceptors().add(new TracingInInterceptor());
 
             portMap.put(portType.getName(), port);
 
