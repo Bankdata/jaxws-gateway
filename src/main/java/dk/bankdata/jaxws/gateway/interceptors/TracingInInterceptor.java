@@ -12,7 +12,7 @@ public class TracingInInterceptor extends AbstractPhaseInterceptor<Message> {
 
     public void handleMessage(Message message) {
         Span requestSpan = (Span) message.getExchange().get("requestTracingSpan");
-        if(requestSpan != null) {
+        if (requestSpan != null) {
             Integer responseStatus = (Integer)message.get(Message.RESPONSE_CODE);
             requestSpan.setTag("http.status_code", responseStatus);
             requestSpan.finish();

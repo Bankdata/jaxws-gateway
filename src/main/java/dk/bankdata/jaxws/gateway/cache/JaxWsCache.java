@@ -1,7 +1,8 @@
 package dk.bankdata.jaxws.gateway.cache;
 
 import dk.bankdata.jaxws.gateway.domain.Environment;
-
+import dk.bankdata.jaxws.gateway.interceptors.TracingInInterceptor;
+import dk.bankdata.jaxws.gateway.interceptors.TracingOutInterceptor;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -11,9 +12,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
-
-import dk.bankdata.jaxws.gateway.interceptors.TracingInInterceptor;
-import dk.bankdata.jaxws.gateway.interceptors.TracingOutInterceptor;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.spi.ProviderImpl;

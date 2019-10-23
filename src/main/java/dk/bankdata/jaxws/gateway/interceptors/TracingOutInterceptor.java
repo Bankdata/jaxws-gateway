@@ -15,7 +15,7 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
 
     public void handleMessage(Message message) {
         Tracer tracer = GlobalTracer.get();
-        if(tracer != null) {
+        if (tracer != null) {
             String endpoint = (String) message.get(Message.ENDPOINT_ADDRESS);
             Span requestSpan = tracer
                     .buildSpan("WS Request")
@@ -31,7 +31,7 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
         // This will be called in case normal execution was aborted, e.g. if connection fails
         // If we have not made it past the TracingInInterceptor, the span will still be open, so we close it here
         Span requestSpan = (Span) message.getExchange().get("requestTracingSpan");
-        if(requestSpan != null) {
+        if (requestSpan != null) {
             requestSpan.setTag("error", true);
             requestSpan.finish();
             message.getExchange().remove("requestTracingSpan");
