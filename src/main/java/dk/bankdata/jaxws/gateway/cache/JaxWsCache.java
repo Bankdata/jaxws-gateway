@@ -65,8 +65,8 @@ public class JaxWsCache {
             requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointUrl.toString());
 
             Client cxfClient = ClientProxy.getClient(port);
-            cxfClient.getInInterceptors().add(new TracingOutInterceptor());
-            cxfClient.getOutInterceptors().add(new TracingInInterceptor());
+            cxfClient.getInInterceptors().add(new TracingInInterceptor());
+            cxfClient.getOutInterceptors().add(new TracingOutInterceptor());
 
             portMap.put(portType.getName(), port);
 
