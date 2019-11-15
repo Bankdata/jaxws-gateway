@@ -1,6 +1,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/dk.bankdata.jaxws/gateway/badge.svg)](https://maven-badges.herokuapp.com/maven-central/dk.bankdata.jaxws/gateway/)
 [![Javadoc](https://javadoc.io/badge/dk.bankdata.jaxrs/security/badge.svg)](https://www.javadoc.io/doc/dk.bankdata.jaxws/gateway)
-[![Build Status](https://travis-ci.com/Bankdata/jaxrs-security.svg?branch=master)](https://travis-ci.com/Bankdata/jaxws-gateway)
+[![Build Status](https://travis-ci.com/Bankdata/jaxws-gateway.svg?branch=master)](https://travis-ci.com/Bankdata/jaxws-gateway)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Known Vulnerabilities](https://snyk.io/test/github/Bankdata/jaxws-gateway/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/Bankdata/jaxws-gateway?targetFile=build.gradle)
 
