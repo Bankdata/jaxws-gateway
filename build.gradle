@@ -30,6 +30,7 @@ repositories {
 dependencies {
     compileOnly(group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: project['org.apache.cxf.version'])
     compileOnly(group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: project['org.apache.cxf.version'])
+    compile(group: 'org.slf4j', name: 'slf4j-api', version: project['org.slf4j.version'])
 
     compileOnly(group: 'io.opentracing', name: 'opentracing-api', version: project['io.opentracing.version'])
     compileOnly(group: 'io.opentracing', name: 'opentracing-util', version: project['io.opentracing.version'])
@@ -38,13 +39,11 @@ dependencies {
     compileOnly(group: 'javax.enterprise', name: 'cdi-api', version: project['javax.enterprise.version'])
 
     compileOnly(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: project['com.fasterxml.jackson.version'])
-    compileOnly(group: 'dk.bankdata.jaxrs', name: 'security', version: project ['dk.bankdata.jaxrs.security.version'])
     compileOnly(group: 'javax.validation', name: 'validation-api', version: project['javax.validation.version'])
     compileOnly(group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: project['com.fasterxml.jackson.version'])
 
     testCompile(group: 'javax.enterprise', name: 'cdi-api', version: project['javax.enterprise.version'])
     testCompile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: project['com.fasterxml.jackson.version'])
-    testCompile(group: 'dk.bankdata.jaxrs', name: 'security', version: project ['dk.bankdata.jaxrs.security.version'])
     testCompile(group: 'junit', name: 'junit', version: project['junit.version'])
     testCompile(group: 'org.mockito', name: 'mockito-core', version: project['org.mockito.version'])
 }
