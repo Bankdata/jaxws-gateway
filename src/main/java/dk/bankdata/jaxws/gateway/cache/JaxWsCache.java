@@ -1,8 +1,11 @@
 package dk.bankdata.jaxws.gateway.cache;
 
 import dk.bankdata.jaxws.gateway.domain.Environment;
+import dk.bankdata.jaxws.gateway.interceptors.MetricsInInterceptor;
+import dk.bankdata.jaxws.gateway.interceptors.MetricsOutInterceptor;
 import dk.bankdata.jaxws.gateway.interceptors.TracingInInterceptor;
 import dk.bankdata.jaxws.gateway.interceptors.TracingOutInterceptor;
+import io.prometheus.client.Histogram;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -12,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
+
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.spi.ProviderImpl;
@@ -26,6 +30,12 @@ public class JaxWsCache {
 
     private Map<String, Object> portMap = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(JaxWsCache.class);
+
+    private final Histogram bdwsRequestHistogram = Histogram.build()
+            .name("bdws_request_latency_seconds")
+            .labelNames("operation")
+            .help("Metrics for all BDWS downstream requests.")
+            .register();
 
     public JaxWsCache(){}
 
@@ -65,8 +75,10 @@ public class JaxWsCache {
             requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointUrl.toString());
 
             Client cxfClient = ClientProxy.getClient(port);
+            cxfClient.getInInterceptors().add(new MetricsInInterceptor());
             cxfClient.getInInterceptors().add(new TracingInInterceptor());
             cxfClient.getOutInterceptors().add(new TracingOutInterceptor());
+            cxfClient.getOutInterceptors().add(new MetricsOutInterceptor(bdwsRequestHistogram, urlPath));
 
             portMap.put(portType.getName(), port);
 
