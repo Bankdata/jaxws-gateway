@@ -32,8 +32,6 @@ public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
 
 
     public void handleFault(Message message) {
-        // This will be called in case normal execution was aborted, e.g. if connection fails
-        // If we have not made it past the TracingInInterceptor, the span will still be open, so we close it here
         Histogram.Timer timer = (Histogram.Timer) message.getExchange().get("requestPrometheusTimer");
 
         if (timer != null) {
