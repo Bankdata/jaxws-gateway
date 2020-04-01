@@ -5,6 +5,7 @@ import dk.bankdata.jaxws.gateway.interceptors.MetricsInInterceptor;
 import dk.bankdata.jaxws.gateway.interceptors.MetricsOutInterceptor;
 import dk.bankdata.jaxws.gateway.interceptors.TracingInInterceptor;
 import dk.bankdata.jaxws.gateway.interceptors.TracingOutInterceptor;
+import io.prometheus.client.Counter;
 import io.prometheus.client.Histogram;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -31,9 +32,19 @@ public class JaxWsCache {
     private Map<String, Object> portMap = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(JaxWsCache.class);
 
+    private final Counter wsFailureCounter = Counter.build()
+            .name("ws_failure_counter")
+            .help("Number of failed ws requests")
+            .register();
+
+    private final Counter wsTotalCounter = Counter.build()
+            .name("ws_total_counter")
+            .help("Number of ws requests")
+            .register();
+
     private final Histogram wsRequestHistogram = Histogram.build()
             .name("ws_request_latency_seconds")
-            .labelNames("operation")
+            .labelNames("service", "operation")
             .help("Metrics for all web service downstream requests.")
             .register();
 
@@ -75,10 +86,13 @@ public class JaxWsCache {
             requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointUrl.toString());
 
             Client cxfClient = ClientProxy.getClient(port);
-            cxfClient.getInInterceptors().add(new MetricsInInterceptor());
+
             cxfClient.getInInterceptors().add(new TracingInInterceptor());
             cxfClient.getOutInterceptors().add(new TracingOutInterceptor());
-            cxfClient.getOutInterceptors().add(new MetricsOutInterceptor(wsRequestHistogram, urlPath));
+
+            cxfClient.getInInterceptors().add(new MetricsInInterceptor());
+            cxfClient.getOutInterceptors().add(new MetricsOutInterceptor(wsRequestHistogram, urlPath,
+                    cacheService.getServiceName().getLocalPart(), wsFailureCounter, wsTotalCounter));
 
             portMap.put(portType.getName(), port);
 

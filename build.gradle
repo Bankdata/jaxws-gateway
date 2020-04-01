@@ -34,7 +34,7 @@ dependencies {
 
     compileOnly(group: 'io.opentracing', name: 'opentracing-api', version: project['io.opentracing.version'])
     compileOnly(group: 'io.opentracing', name: 'opentracing-util', version: project['io.opentracing.version'])
-    compileOnly(group: 'dk.bankdata.prometheus', name: 'jaxrs-exporter', version: project['dk.bankdata.prometheus.version'])
+    compileOnly(group: 'io.prometheus', name: 'simpleclient', version: project['io.prometheus.version'])
 
     compileOnly(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: project ['javax.ws.rs.api.version'])
     compileOnly(group: 'javax.enterprise', name: 'cdi-api', version: project['javax.enterprise.version'])
