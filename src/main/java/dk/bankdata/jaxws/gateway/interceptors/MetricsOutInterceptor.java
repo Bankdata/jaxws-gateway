@@ -7,16 +7,16 @@ import org.apache.cxf.phase.Phase;
 
 public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
     private Histogram prometheusHistogram;
-    private String bdwsUrl;
+    private String traceUrl;
 
-    public MetricsOutInterceptor(Histogram prometheusHistogram, String bdwsUrl) {
+    public MetricsOutInterceptor(Histogram prometheusHistogram, String traceUrl) {
         super(Phase.SETUP);
         this.prometheusHistogram = prometheusHistogram;
-        this.bdwsUrl = bdwsUrl;
+        this.traceUrl = traceUrl;
     }
 
     public void handleMessage(Message message) {
-        Histogram.Timer timer = prometheusHistogram.labels(bdwsUrl).startTimer();
+        Histogram.Timer timer = prometheusHistogram.labels(traceUrl).startTimer();
         message.getExchange().put("requestPrometheusTimer", timer);
     }
 
@@ -24,6 +24,7 @@ public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
         // This will be called in case normal execution was aborted, e.g. if connection fails
         // If we have not made it past the TracingInInterceptor, the span will still be open, so we close it here
         Histogram.Timer timer = (Histogram.Timer) message.getExchange().get("requestPrometheusTimer");
+
         if (timer != null) {
             timer.observeDuration();
         }
