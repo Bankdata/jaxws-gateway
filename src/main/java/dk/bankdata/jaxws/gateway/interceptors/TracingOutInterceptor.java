@@ -31,6 +31,7 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
         // This will be called in case normal execution was aborted, e.g. if connection fails
         // If we have not made it past the TracingInInterceptor, the span will still be open, so we close it here
         Span requestSpan = (Span) message.getExchange().get("requestTracingSpan");
+
         if (requestSpan != null) {
             requestSpan.setTag("error", true);
             requestSpan.finish();
