@@ -21,6 +21,7 @@ public class TracingInInterceptor extends AbstractPhaseInterceptor<Message> {
     }
 
     public void handleFault(Message messageParam) {
-
+        // This should only be called if we have made it successfully past this stage
+        // in which case the span has already been closed.
     }
 }
