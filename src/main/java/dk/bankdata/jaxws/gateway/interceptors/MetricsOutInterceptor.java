@@ -8,7 +8,6 @@ import org.apache.cxf.phase.Phase;
 
 public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
     private Histogram prometheusHistogram;
-    private Counter failureCounter;
     private Counter.Child counterChild;
     private final String traceUrl;
     private final String service;
@@ -19,7 +18,6 @@ public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
         this.prometheusHistogram = prometheusHistogram;
         this.traceUrl = traceUrl;
         this.service = service;
-        this.failureCounter = failureCounter;
         this.counterChild = failureCounter.labels(service, traceUrl);
     }
 
