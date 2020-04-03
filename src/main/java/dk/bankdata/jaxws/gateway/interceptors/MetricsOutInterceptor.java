@@ -7,8 +7,8 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
 
 public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
-    private Histogram.Child histogramChild;
-    private Counter.Child counterChild;
+    private final Histogram.Child histogramChild;
+    private final Counter.Child counterChild;
 
     public MetricsOutInterceptor(Histogram prometheusHistogram, String operation, String service,
                                  Counter failureCounter) {
