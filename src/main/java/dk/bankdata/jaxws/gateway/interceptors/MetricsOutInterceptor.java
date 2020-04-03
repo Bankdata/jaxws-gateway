@@ -7,25 +7,20 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
 
 public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
-    private Histogram prometheusHistogram;
+    private Histogram.Child histogramChild;
     private Counter.Child counterChild;
-    private final String traceUrl;
-    private final String service;
 
-    public MetricsOutInterceptor(Histogram prometheusHistogram, String traceUrl, String service,
+    public MetricsOutInterceptor(Histogram prometheusHistogram, String operation, String service,
                                  Counter failureCounter) {
         super(Phase.SETUP);
-        this.prometheusHistogram = prometheusHistogram;
-        this.traceUrl = traceUrl;
-        this.service = service;
-        this.counterChild = failureCounter.labels(service, traceUrl);
+        this.histogramChild = prometheusHistogram.labels(service, operation);
+        this.counterChild = failureCounter.labels(service, operation);
     }
 
     public void handleMessage(Message message) {
-        Histogram.Timer timer = prometheusHistogram.labels(service, traceUrl).startTimer();
+        Histogram.Timer timer = histogramChild.startTimer();
         message.getExchange().put("requestPrometheusTimer", timer);
     }
-
 
     public void handleFault(Message message) {
         Histogram.Timer timer = (Histogram.Timer) message.getExchange().get("requestPrometheusTimer");

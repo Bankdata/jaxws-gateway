@@ -34,6 +34,7 @@ public class JaxWsCache {
 
     private final Counter wsFailureCounter = Counter.build()
             .name("ws_failure_counter")
+            .labelNames("service", "operation")
             .help("Number of failed web service requests")
             .register();
 
