@@ -37,11 +37,6 @@ public class JaxWsCache {
             .help("Number of failed web service requests")
             .register();
 
-    private final Counter wsTotalCounter = Counter.build()
-            .name("ws_total_counter")
-            .help("Number of web service requests")
-            .register();
-
     private final Histogram wsRequestHistogram = Histogram.build()
             .name("ws_request_latency_seconds")
             .labelNames("service", "operation")
@@ -92,7 +87,7 @@ public class JaxWsCache {
 
             cxfClient.getInInterceptors().add(new MetricsInInterceptor());
             cxfClient.getOutInterceptors().add(new MetricsOutInterceptor(wsRequestHistogram, urlPath,
-                    cacheService.getServiceName().getLocalPart(), wsFailureCounter, wsTotalCounter));
+                    cacheService.getServiceName().getLocalPart(), wsFailureCounter));
 
             portMap.put(portType.getName(), port);
 
