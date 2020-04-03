@@ -34,12 +34,12 @@ public class JaxWsCache {
 
     private final Counter wsFailureCounter = Counter.build()
             .name("ws_failure_counter")
-            .help("Number of failed ws requests")
+            .help("Number of failed web service requests")
             .register();
 
     private final Counter wsTotalCounter = Counter.build()
             .name("ws_total_counter")
-            .help("Number of ws requests")
+            .help("Number of web service requests")
             .register();
 
     private final Histogram wsRequestHistogram = Histogram.build()
