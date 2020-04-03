@@ -26,8 +26,6 @@ public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
     public void handleMessage(Message message) {
         Histogram.Timer timer = prometheusHistogram.labels(service, traceUrl).startTimer();
         message.getExchange().put("requestPrometheusTimer", timer);
-
-        totalCounter.inc();
     }
 
 
@@ -38,7 +36,6 @@ public class MetricsOutInterceptor  extends AbstractPhaseInterceptor<Message> {
             timer.observeDuration();
         }
 
-        failureCounter.inc();
+        failureCounter.labels(service, traceUrl).inc();
     }
-
 }
