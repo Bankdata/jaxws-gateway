@@ -115,13 +115,13 @@ public class JaxWsCache {
 
     private QName getQName(Service service, Class<?> portType) {
         String portName = portType.getSimpleName();
+        String searchString = portName.replace("PortType", "");
         Iterator<QName> qnames = service.getPorts();
 
         while (qnames.hasNext()) {
             QName qname = qnames.next();
-            String searchString = portName.replace("PortType", "");
 
-            if (qname.getLocalPart().contains(searchString)) {
+            if (qname.getLocalPart().equalsIgnoreCase(searchString)) {
                 return qname;
             }
         }
