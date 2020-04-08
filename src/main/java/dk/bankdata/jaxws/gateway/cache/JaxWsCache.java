@@ -56,14 +56,10 @@ public class JaxWsCache {
             Service cacheService = service.newInstance();
 
             QName name = getQName(cacheService, portType);
-            Object port;
 
-            if (name == null) {
-                port = cacheService.getPort(portType);
-            } else {
-                port = cacheService.getPort(name, portType);
-            }
-
+            Object port = name == null ?
+                    cacheService.getPort(portType) :
+                    cacheService.getPort(name, portType);
 
             BindingProvider provider = (BindingProvider) port;
             Map<String, Object> requestContext = provider.getRequestContext();
@@ -115,7 +111,7 @@ public class JaxWsCache {
 
     private QName getQName(Service service, Class<?> portType) {
         String portName = portType.getSimpleName();
-        int lengthOfPortType = "PortName".length();
+        int lengthOfPortType = "PortType".length();
 
         String searchString = portName.substring(0, portName.length() - lengthOfPortType);
         Iterator<QName> qnames = service.getPorts();
