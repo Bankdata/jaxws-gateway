@@ -60,6 +60,7 @@ public class JaxWsCache {
 
             if (name == null) {
                 port = cacheService.getPort(portType);
+                LOG.warn("Unable to find Qname for service " + service.getSimpleName());
             } else {
                 port = cacheService.getPort(name, portType);
             }
@@ -115,7 +116,9 @@ public class JaxWsCache {
 
     private QName getQName(Service service, Class<?> portType) {
         String portName = portType.getSimpleName();
-        String searchString = portName.replace("PortType", "");
+        int removedPortType = 8;
+
+        String searchString = portName.substring(0, portName.length() - removedPortType);
         Iterator<QName> qnames = service.getPorts();
 
         while (qnames.hasNext()) {
