@@ -11,9 +11,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
@@ -52,7 +54,12 @@ public class JaxWsCache {
 
             long start = System.currentTimeMillis();
             Service cacheService = service.newInstance();
-            Object port = cacheService.getPort(portType);
+
+            QName name = getQName(cacheService, portType);
+
+            Object port = name == null ?
+                    cacheService.getPort(portType) :
+                    cacheService.getPort(name, portType);
 
             BindingProvider provider = (BindingProvider) port;
             Map<String, Object> requestContext = provider.getRequestContext();
@@ -102,14 +109,33 @@ public class JaxWsCache {
         return this;
     }
 
+    private QName getQName(Service service, Class<?> portType) {
+        String portName = portType.getSimpleName();
+        int lengthOfPortType = "PortType".length();
+
+        String searchString = portName.substring(0, portName.length() - lengthOfPortType);
+        Iterator<QName> qnames = service.getPorts();
+
+        while (qnames.hasNext()) {
+            QName qname = qnames.next();
+
+            if (qname.getLocalPart().equalsIgnoreCase(searchString)) {
+                return qname;
+            }
+        }
+
+        LOG.warn("Unable to find Qname for Port " + portName);
+        return null;
+    }
+
     private void checkCxfAvailability() {
         try {
             ProviderImpl.provider().getClass();
         } catch (java.lang.NoClassDefFoundError e) {
             throw new RuntimeException("org.apache.cxf provider not available. " +
                     "Please add the following to your gradle.build \r\n" +
-                    "compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.3' \r\n" +
-                    "compile group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.3' \r\n" +
+                    "compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.5' \r\n" +
+                    "compile group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.5' \r\n" +
                     "Version is the minimum tested - newer version may be available! \r\n");
         }
     }
