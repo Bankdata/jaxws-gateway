@@ -109,7 +109,7 @@ public class JaxWsCache {
         return this;
     }
 
-    private QName getQName(Service service, Class<?> portType) {
+    protected QName getQName(Service service, Class<?> portType) {
         String portName = portType.getSimpleName();
         int lengthOfPortType = "PortType".length();
 
@@ -119,7 +119,7 @@ public class JaxWsCache {
         while (qnames.hasNext()) {
             QName qname = qnames.next();
 
-            if (qname.getLocalPart().equalsIgnoreCase(searchString)) {
+            if (qname.getLocalPart().startsWith(searchString)) {
                 return qname;
             }
         }
