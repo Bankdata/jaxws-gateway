@@ -57,9 +57,9 @@ public class JaxWsCache {
 
             QName name = getQName(cacheService, portType);
 
-            Object port = name == null ?
-                    cacheService.getPort(portType) :
-                    cacheService.getPort(name, portType);
+            Object port = name == null
+                    ? cacheService.getPort(portType)
+                    : cacheService.getPort(name, portType);
 
             BindingProvider provider = (BindingProvider) port;
             Map<String, Object> requestContext = provider.getRequestContext();
