@@ -1,5 +1,6 @@
 package dk.bankdata.jaxws.gateway.interceptors;
 
+import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
@@ -22,8 +23,10 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
                     .withTag("span.kind", "client")
                     .withTag("http.url", endpoint)
                     .start();
-            tracer.scopeManager().activate(requestSpan, false);
-            message.getExchange().put("requestTracingSpan", requestSpan);
+            try (Scope scope = tracer.scopeManager().activate(requestSpan, false)) {
+                message.getExchange().put("requestTracingSpan", requestSpan);
+            }
+
         }
     }
 
@@ -33,9 +36,12 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
         Span requestSpan = (Span) message.getExchange().get("requestTracingSpan");
 
         if (requestSpan != null) {
-            requestSpan.setTag("error", true);
-            requestSpan.finish();
-            message.getExchange().remove("requestTracingSpan");
+            Tracer tracer = GlobalTracer.get();
+            try (Scope scope = tracer.scopeManager().activate(requestSpan, false)) {
+                requestSpan.setTag("error", true);
+                requestSpan.finish();
+                message.getExchange().remove("requestTracingSpan");
+            }
         }
     }
 }
