@@ -23,7 +23,7 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
                     .withTag("span.kind", "client")
                     .withTag("http.url", endpoint)
                     .start();
-            try (Scope scope = tracer.scopeManager().activate(requestSpan)) {
+            try (Scope scope = tracer.scopeManager().activate(requestSpan, false)) {
                 message.getExchange().put("requestTracingSpan", requestSpan);
             }
 
@@ -37,7 +37,7 @@ public class TracingOutInterceptor extends AbstractPhaseInterceptor<Message> {
 
         if (requestSpan != null) {
             Tracer tracer = GlobalTracer.get();
-            try (Scope scope = tracer.scopeManager().activate(requestSpan)) {
+            try (Scope scope = tracer.scopeManager().activate(requestSpan, false)) {
                 requestSpan.setTag("error", true);
                 requestSpan.finish();
                 message.getExchange().remove("requestTracingSpan");
