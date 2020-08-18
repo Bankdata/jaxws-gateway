@@ -17,7 +17,7 @@ public class TracingInInterceptor extends AbstractPhaseInterceptor<Message> {
         Span requestSpan = (Span) message.getExchange().get("requestTracingSpan");
         if (requestSpan != null) {
             Tracer tracer = GlobalTracer.get();
-            try (Scope scope = tracer.scopeManager().activate(requestSpan, false)) {
+            try (Scope scope = tracer.scopeManager().activate(requestSpan)) {
                 Integer responseStatus = (Integer) message.get(Message.RESPONSE_CODE);
                 requestSpan.setTag("http.status_code", responseStatus);
                 requestSpan.finish();
