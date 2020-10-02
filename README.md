@@ -1,5 +1,5 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/dk.bankdata.jaxws/gateway/badge.svg)](https://maven-badges.herokuapp.com/maven-central/dk.bankdata.jaxws/gateway/)
-[![Javadoc](https://javadoc.io/badge/dk.bankdata.jaxrs/security/badge.svg)](https://www.javadoc.io/doc/dk.bankdata.jaxws/gateway)
+[![Javadoc](https://javadoc.io/badge/dk.bankdata.jaxws/gateway/badge.svg)](https://www.javadoc.io/doc/dk.bankdata.jaxws/gateway)
 [![Build Status](https://travis-ci.com/Bankdata/jaxws-gateway.svg?branch=master)](https://travis-ci.com/Bankdata/jaxws-gateway)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Known Vulnerabilities](https://snyk.io/test/github/Bankdata/jaxws-gateway/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/Bankdata/jaxws-gateway?targetFile=build.gradle)
@@ -15,7 +15,7 @@ https://search.maven.org/artifact/dk.bankdata.jaxws/gateway
 
 ### Prerequisites
 
-This library needs java 1.8 to function correctly
+This library needs Java 8 or higher to function correctly
 
 [Download here](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
@@ -38,7 +38,7 @@ Please make sure to update tests as appropriate.
 In the following section there will be provided code examples of each part of this library
 
 ### System environment and dependencies
-For this library i function you need to do the following:
+For this library to function you need to do the following:
 1) add these dependencies to your gradle.build file<br>
    `compile(group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.3')`<br>
    `compile(group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.3')`<br>
